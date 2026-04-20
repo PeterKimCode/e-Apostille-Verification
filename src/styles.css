@@ -75,8 +75,9 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 .pdf-preview .preview-time{position:absolute;top:-22px;right:18px;background:#fff;color:#333;padding:6px 12px;border-radius:18px;font-size:12px;box-shadow:0 6px 18px rgba(15,23,42,0.08);z-index:12}
 
 /* visual toolbar inside preview (non-functional) */
-.pdf-native-toolbar{position:absolute;top:12px;left:12px;right:12px;height:44px;background:#222;color:#fff;border-radius:6px;display:flex;align-items:center;gap:8px;padding:6px 10px;z-index:11}
+.pdf-native-toolbar{position:absolute;top:12px;left:18px;right:18px;height:44px;background:#2b2b2b;color:#fff;border-radius:8px;display:flex;align-items:center;gap:10px;padding:6px 12px;z-index:11;box-shadow:0 6px 18px rgba(15,23,42,0.12)}
 .pdf-native-toolbar .btn-icon{background:transparent;border:0;color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer}
+.pdf-native-toolbar .btn-icon:hover{background:rgba(255,255,255,0.03)}
 .pdf-native-toolbar .page-box{background:#111;color:#fff;padding:6px 10px;border-radius:6px;font-weight:700}
 
 /* Minimal PDF toolbar overlay to mimic compact viewer controls */
@@ -99,7 +100,8 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 .btn.view-only{background:#fff;color:#333;border:1px solid #e6eef8;padding:6px 10px;border-radius:16px}
 
 /* Page meta row below header */
-.page-meta{max-width:1180px;margin:8px auto 18px;display:flex;justify-content:space-between;align-items:center;padding:0 36px 0 140px}
+.page-meta{max-width:1280px;margin:8px auto 18px;display:flex;justify-content:space-between;align-items:center;padding:0 36px 0 140px}
+.page-meta .meta-right{display:none}
 .meta-badge{display:flex;align-items:center;gap:12px}
 .meta-icon{width:40px;height:40px;border-radius:50%;background:#f0fbf5;display:inline-flex;align-items:center;justify-content:center;color:#28a745;font-weight:700}
 .meta-title{font-weight:700;font-size:18px}
