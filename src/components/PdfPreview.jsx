@@ -18,6 +18,7 @@ export default function PdfPreview() {
           <div className="preview-sub muted">For visual verification only. Preview link may expire soon.</div>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <div className="preview-time" style={{marginRight:8}}>{timeString}</div>
           <div className="preview-actions">
             <button className="btn view-only">View only</button>
           </div>
@@ -25,22 +26,8 @@ export default function PdfPreview() {
       </div>
 
       <div className="preview-frame">
-        <div className="pdf-native-toolbar" aria-hidden>
-          <button className="btn-icon">◀</button>
-          <div className="page-box">1</div>
-          <div style={{color:'#ddd'}}>/</div>
-          <div style={{color:'#ddd'}}>6</div>
-          <button className="btn-icon">▶</button>
-          <div style={{flex:1}} />
-          <button className="btn-icon">−</button>
-          <button className="btn-icon">＋</button>
-          <button className="btn-icon">⟳</button>
-          <button className="btn-icon">⤓</button>
-          <button className="btn-icon">🖨</button>
-        </div>
         <iframe title="pdf-viewer" src={pdfUrl} frameBorder="0" />
       </div>
-      <div className="preview-time">{timeString}</div>
     </section>
   )
 }
