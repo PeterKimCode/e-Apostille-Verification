@@ -5,6 +5,11 @@ export default function PdfPreview() {
   // `import.meta.env.BASE_URL` is '/' in dev and the configured `base` in production.
   const pdfUrl = (import.meta.env.BASE_URL || '/') + 'Apostille.pdf'
 
+  const now = new Date()
+  const datePart = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const timePart = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  const timeString = `${datePart} ${timePart}`
+
   return (
     <section className="pdf-preview">
       <div className="preview-top">
@@ -20,8 +25,22 @@ export default function PdfPreview() {
       </div>
 
       <div className="preview-frame">
+        <div className="pdf-native-toolbar" aria-hidden>
+          <button className="btn-icon">◀</button>
+          <div className="page-box">1</div>
+          <div style={{color:'#ddd'}}>/</div>
+          <div style={{color:'#ddd'}}>6</div>
+          <button className="btn-icon">▶</button>
+          <div style={{flex:1}} />
+          <button className="btn-icon">−</button>
+          <button className="btn-icon">＋</button>
+          <button className="btn-icon">⟳</button>
+          <button className="btn-icon">⤓</button>
+          <button className="btn-icon">🖨</button>
+        </div>
         <iframe title="pdf-viewer" src={pdfUrl} frameBorder="0" />
       </div>
+      <div className="preview-time">{timeString}</div>
     </section>
   )
 }
