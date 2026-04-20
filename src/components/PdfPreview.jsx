@@ -3,7 +3,7 @@ import React from 'react'
 export default function PdfPreview() {
   // Use the Vite base so the PDF path works both locally and on GitHub Pages.
   // `import.meta.env.BASE_URL` is '/' in dev and the configured `base` in production.
-  const pdfUrl = (import.meta.env.BASE_URL || '/') + 'Apostille.pdf'
+  const pdfUrl = (import.meta.env.BASE_URL || '/') + 'Apostille.pdf#toolbar=0'
 
   return (
     <section className="pdf-preview">
@@ -18,6 +18,16 @@ export default function PdfPreview() {
       </div>
 
       <div className="preview-frame">
+        <div className="pdf-toolbar" aria-hidden>
+          <button className="icon-btn">◀</button>
+          <div className="page-indicator">1 / 6</div>
+          <button className="icon-btn">▶</button>
+          <div style={{flex:1}} />
+          <button className="icon-btn">−</button>
+          <button className="icon-btn">＋</button>
+          <button className="icon-btn">⟳</button>
+          <button className="icon-btn">⤓</button>
+        </div>
         <iframe title="pdf-viewer" src={pdfUrl} frameBorder="0" />
       </div>
     </section>
