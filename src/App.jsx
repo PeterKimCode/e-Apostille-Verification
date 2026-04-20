@@ -4,12 +4,13 @@ import PdfPreview from './components/PdfPreview'
 
 export default function App() {
   const now = new Date()
-  const timeString = now.toLocaleString(undefined, {
+  const timeString = now.toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
-    minute: '2-digit'
+    minute: '2-digit',
+    hour12: true
   })
 
   return (
@@ -17,10 +18,10 @@ export default function App() {
       <header className="top-header">
         <div className="header-inner">
           <div className="brand">
-            <img src={import.meta.env.BASE_URL + 'Logo.png'} alt="Logo" className="logo-image" />
+            <img src={import.meta.env.BASE_URL + 'Logo.svg'} alt="Logo" className="logo-image" />
             <div className="brand-text">
               <div className="brand-title">DEPARTMENT OF FOREIGN AFFAIRS</div>
-              <div className="brand-sub">Office of Consular Affairs</div>
+              <div className="brand-sub">OFFICE OF CONSULAR AFFAIRS<br/>AUTHENTICATION DIVISION</div>
             </div>
           </div>
           <div className="header-right">
