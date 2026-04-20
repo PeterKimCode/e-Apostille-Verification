@@ -1,10 +1,9 @@
 import React from 'react'
 
 export default function PdfPreview() {
-  // Load the local PDF directly. Using the external PDF.js viewer caused the
-  // blank page due to cross-origin / viewer restrictions. Serving the PDF
-  // directly ensures the browser can render it at /register.pdf.
-  const pdfUrl = '/register.pdf'
+  // Use the Vite base so the PDF path works both locally and on GitHub Pages.
+  // `import.meta.env.BASE_URL` is '/' in dev and the configured `base` in production.
+  const pdfUrl = (import.meta.env.BASE_URL || '/') + 'register.pdf'
 
   return (
     <section className="pdf-preview">
