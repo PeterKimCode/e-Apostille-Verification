@@ -46,7 +46,13 @@ export default function LeftCard() {
   return (
     <aside className="left-card">
       <div className="card-top">
-        <h2>e-Apostille Verification</h2>
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" style={{verticalAlign:'middle',marginRight:8}} xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#e6f7ef" />
+            <path d="M9 12l2 2 4-4" stroke="#0b7a3d" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          e-Apostille Verification
+        </h2>
         <p className="muted">Public verification portal · Certificate verified</p>
       </div>
 
