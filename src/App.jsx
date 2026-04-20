@@ -17,7 +17,7 @@ export default function App() {
       <header className="top-header">
         <div className="header-inner">
           <div className="brand">
-            <div className="logo-placeholder">DFA</div>
+            <img src={import.meta.env.BASE_URL + 'Logo.png'} alt="Logo" className="logo-image" />
             <div className="brand-text">
               <div className="brand-title">DEPARTMENT OF FOREIGN AFFAIRS</div>
               <div className="brand-sub">Office of Consular Affairs</div>
