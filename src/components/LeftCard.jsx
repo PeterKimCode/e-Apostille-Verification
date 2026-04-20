@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 function Details({ data }) {
   if (!data) return null
@@ -35,36 +35,12 @@ function Details({ data }) {
   )
 }
 
-function mockVerify(code) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (!code || code.length < 10) resolve({ found: false })
-      else
-        resolve({
-          found: true,
-          status: 'VALID',
-          reference: code,
-        })
-    }, 600)
-  })
-}
-
 export default function LeftCard() {
-  const [code, setCode] = useState('')
-  const [loading, setLoading] = useState(false)
-  // show details by default (user requested no verification code needed)
-  const [data, setData] = useState({
+  // show details by default (no input required)
+  const data = {
     found: true,
     status: 'VALID',
-    reference: '26e-0016922',
-  })
-
-  async function handleVerify(e) {
-    e && e.preventDefault()
-    setLoading(true)
-    const res = await mockVerify(code.trim())
-    setData(res)
-    setLoading(false)
+    reference: '26e-0016922'
   }
 
   return (
@@ -73,14 +49,6 @@ export default function LeftCard() {
         <h2>e-Apostille Verification</h2>
         <p className="muted">Public verification portal · Certificate verified</p>
       </div>
-
-      <form className="verify-form" onSubmit={handleVerify}>
-        <label>Enter verification code</label>
-        <textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Paste code or URL here" />
-        <div className="form-actions">
-          <button className="btn" type="submit" disabled={loading}>{loading ? 'Verifying…' : 'Verify'}</button>
-        </div>
-      </form>
 
       <div className="card-body">
         <Details data={data} />

@@ -9,8 +9,11 @@ export default function PdfPreview() {
   return (
     <section className="pdf-preview">
       <div className="preview-top">
-        <div className="preview-title">e-Apostille Preview</div>
-        <div className="preview-sub muted">For visual verification only. Preview link may expire soon.</div>
+        <div>
+          <div className="preview-title">e-Apostille Preview</div>
+          <div className="preview-sub muted">For visual verification only. Preview link may expire soon.</div>
+        </div>
+        <div className="file-label">@file:register.pdf</div>
       </div>
 
       <div className="preview-frame">
