@@ -52,7 +52,12 @@ function mockVerify(code) {
 export default function LeftCard() {
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState(null)
+  // show details by default (user requested no verification code needed)
+  const [data, setData] = useState({
+    found: true,
+    status: 'VALID',
+    reference: '26e-0016922',
+  })
 
   async function handleVerify(e) {
     e && e.preventDefault()

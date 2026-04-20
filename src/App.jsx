@@ -3,6 +3,15 @@ import LeftCard from './components/LeftCard'
 import PdfPreview from './components/PdfPreview'
 
 export default function App() {
+  const now = new Date()
+  const timeString = now.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })
+
   return (
     <div className="app-root layout-two-col">
       <header className="top-header">
@@ -14,7 +23,10 @@ export default function App() {
               <div className="brand-sub">Office of Consular Affairs</div>
             </div>
           </div>
-          <div className="header-right">e-Apostille Verification</div>
+          <div className="header-right">
+            <div className="header-time">{timeString}</div>
+            <div className="header-title">e-Apostille Verification</div>
+          </div>
         </div>
       </header>
 
