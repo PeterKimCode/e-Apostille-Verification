@@ -58,6 +58,10 @@ export default function LeftCard() {
 
       <div className="card-body">
         <Details data={data} />
+        <div className="card-actions bottom-actions">
+          <button className="btn secondary">Refresh</button>
+          <button className="btn">Back</button>
+        </div>
       </div>
     </aside>
   )

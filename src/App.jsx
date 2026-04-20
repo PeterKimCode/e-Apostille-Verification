@@ -14,12 +14,13 @@ export default function App() {
   })
 
   return (
-    <div className="app-root layout-two-col">
-      <header className="top-header">
+    <>
+      <header className="top-header full-width">
         <div className="header-inner">
           <div className="brand">
-            <img src={import.meta.env.BASE_URL + 'Logo.svg'} alt="Logo" className="logo-image" />
+            <img src={import.meta.env.BASE_URL + 'Logo.png'} alt="Logo" className="logo-image" />
             <div className="brand-text">
+              <div className="country">REPUBLIC OF THE PHILIPPINES</div>
               <div className="brand-title">DEPARTMENT OF FOREIGN AFFAIRS</div>
               <div className="brand-sub">OFFICE OF CONSULAR AFFAIRS<br/>AUTHENTICATION DIVISION</div>
             </div>
@@ -31,12 +32,12 @@ export default function App() {
         </div>
       </header>
 
-      <main className="main-grid">
-        <LeftCard />
-        <PdfPreview />
-      </main>
-
-      <footer className="site-footer">Demo — Not an official site</footer>
-    </div>
+      <div className="app-root layout-two-col">
+        <main className="main-grid">
+          <LeftCard />
+          <PdfPreview />
+        </main>
+      </div>
+    </>
   )
 }
