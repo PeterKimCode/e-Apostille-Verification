@@ -26,6 +26,16 @@ Pushing to GitHub
 
 If you want me to push, share a PAT with `repo` permissions and I will push to `main`.
 
+GitHub Pages (automatic)
+
+- This repository now includes a GitHub Actions workflow that builds the Vite app and deploys the `dist` folder to the `gh-pages` branch on every push to `main`.
+- After you push to `main`, the action will run and publish the site at:
+  `https://<your-username>.github.io/e-Apostille-Verification/`
+- Notes:
+  - The Vite config sets a production `base` so assets load correctly on GitHub Pages.
+  - You don't need a PAT for the action — the workflow uses the built-in `GITHUB_TOKEN` to publish.
+  - If you prefer manual deployment, build locally with `npm run build` and copy `dist/` to your Pages branch.
+
 Disclaimer
 
 This is a demo implementation and not an official copy of any government site. Do not use it as an authoritative source.
