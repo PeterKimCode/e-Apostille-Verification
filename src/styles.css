@@ -5,7 +5,7 @@
   --muted:#666;
 }
 *{box-sizing:border-box}
-.app-root{max-width:1280px;margin:14px auto;padding:0 18px}
+.app-root{max-width:1280px;margin:14px auto;padding:0 36px}
 body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:#111}
 
 /* Header */
@@ -30,7 +30,7 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 .badge{padding:6px 12px;border-radius:18px;font-weight:700;display:flex;align-items:center;gap:8px}
 .badge.verified{background:#e9f8ef;color:#0b7a3d}
 .badge .dot{width:10px;height:10px;background:#28a745;border-radius:50%;display:inline-block}
-.details-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 14px;margin-top:12px}
+.details-grid{display:grid;grid-template-columns:180px 1fr;gap:8px 14px;margin-top:12px}
 .label{color:#666;font-size:14px}
 .value{font-weight:700}
 .notice{margin-top:14px;background:#f8f9fb;padding:12px;border-radius:8px;font-size:13px}
@@ -74,6 +74,10 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 /* Left card content sizing */
 .details-grid .label{font-size:14px}
 .details-grid .value{font-weight:700;font-size:14px}
+
+/* Make verification and preview headings bold */
+.details-header .title{font-weight:700}
+.preview-title{font-weight:700}
 
 /* small subtitle below Verification Details title */
 .details-sub{font-size:13px;color:var(--muted);margin-top:4px}

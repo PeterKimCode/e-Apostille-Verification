@@ -11,7 +11,7 @@ function Details({ data }) {
           <div className="title">Verification Details</div>
           <div className="details-sub">This certificate is valid and matches the registry record.</div>
         </div>
-        <div className="badge verified">Verified</div>
+        <div className="badge verified"><span className="dot"/>Verified</div>
       </div>
 
       <div className="details-grid">
@@ -28,7 +28,7 @@ function Details({ data }) {
         <div className="value">Commission on Higher Education</div>
       </div>
 
-      <div className="notice">Notice: This preview is for on-screen verification only. Printing or saving is discouraged and may be restricted by policy.</div>
+      <div className="notice"><strong>Notice:</strong> This preview is for on-screen verification only. Printing or saving is discouraged and may be restricted by policy.</div>
     </div>
   )
 }
