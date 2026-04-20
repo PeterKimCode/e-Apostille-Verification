@@ -79,7 +79,7 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 
 /* Left card content sizing */
 .details-grid .label{font-size:14px}
-.details-grid .value{font-weight:700;font-size:14px}
+.details-grid .value{font-weight:400;font-size:14px}
 
 /* Make verification and preview headings bold */
 .details-header .title{font-weight:700}
