@@ -5,6 +5,11 @@ export default function PdfPreview() {
   // `import.meta.env.BASE_URL` is '/' in dev and the configured `base` in production.
   const pdfUrl = (import.meta.env.BASE_URL || '/') + 'Apostille.pdf#toolbar=0'
 
+  const now = new Date()
+  const datePart = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const timePart = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+  const timeString = `${datePart} ${timePart}`
+
   return (
     <section className="pdf-preview">
       <div className="preview-top">
@@ -16,6 +21,8 @@ export default function PdfPreview() {
           <button className="btn view-only">View only</button>
         </div>
       </div>
+
+      <div className="preview-time">{timeString}</div>
 
       <div className="preview-frame">
         <div className="pdf-toolbar" aria-hidden>
