@@ -1,11 +1,18 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import App from './App'
 import './styles.css'
 
 const root = createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/verify/:serialNumber" element={<App />} />
+        <Route path="/" element={<Navigate to="/verify/26e-0016922" replace />} />
+        <Route path="*" element={<Navigate to="/verify/26e-0016922" replace />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 )

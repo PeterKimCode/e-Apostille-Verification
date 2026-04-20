@@ -1,8 +1,9 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import mockData from '../data/mockData.json'
 
-function Details({ data }) {
-  if (!data) return null
-  if (!data.found) return <div className="verification-notfound">No record found.</div>
+function Details({ record }) {
+  if (!record) return <div className="verification-notfound">유효하지 않은 서류 번호입니다.</div>
 
   return (
     <div className="verification-details">
@@ -16,16 +17,16 @@ function Details({ data }) {
 
       <div className="details-grid">
         <div className="label">Serial Number</div>
-        <div className="value">26e-0016922</div>
+        <div className="value">{record.serialNumber}</div>
 
         <div className="label">Signed By</div>
-        <div className="value">Rogelio T. Galera, Jr.</div>
+        <div className="value">{record.signedBy}</div>
 
         <div className="label">Capacity</div>
-        <div className="value">Regional Director</div>
+        <div className="value">{record.capacity}</div>
 
         <div className="label">Seal Of</div>
-        <div className="value">Commission on Higher Education</div>
+        <div className="value">{record.sealOf}</div>
       </div>
 
       <div className="notice"><strong>Notice:</strong> This preview is for on-screen verification only. Printing or saving is discouraged and may be restricted by policy.</div>
@@ -34,19 +35,13 @@ function Details({ data }) {
 }
 
 export default function LeftCard() {
-  // show details by default (no input required)
-  const data = {
-    found: true,
-    status: 'VALID',
-    reference: '26e-0016922'
-  }
+  const { serialNumber } = useParams()
+  const record = mockData.find(r => r.serialNumber === serialNumber)
 
   return (
     <aside className="left-card">
-      
-
       <div className="card-body">
-        <Details data={data} />
+        <Details record={record} />
         <div className="card-actions bottom-actions">
           <button className="btn primary">Refresh</button>
           <button className="btn secondary">Back</button>
