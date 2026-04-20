@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import mockData from '../data/mockData.json'
 
 function Details({ record }) {
-  if (!record) return <div className="verification-notfound">유효하지 않은 서류 번호입니다.</div>
+  if (!record) return <div className="verification-notfound">The document number is invalid.</div>
 
   return (
     <div className="verification-details">
