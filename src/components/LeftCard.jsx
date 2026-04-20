@@ -7,7 +7,10 @@ function Details({ data }) {
   return (
     <div className="verification-details">
       <div className="details-header">
-        <div className="title">Verification Details</div>
+        <div>
+          <div className="title">Verification Details</div>
+          <div className="details-sub">This certificate is valid and matches the registry record.</div>
+        </div>
         <div className="badge verified">Verified</div>
       </div>
 
@@ -25,7 +28,7 @@ function Details({ data }) {
         <div className="value">Commission on Higher Education</div>
       </div>
 
-      <div className="notice">This preview is for on-screen verification only. Printing or saving is discouraged and may be restricted by policy.</div>
+      <div className="notice">Notice: This preview is for on-screen verification only. Printing or saving is discouraged and may be restricted by policy.</div>
     </div>
   )
 }
@@ -40,23 +43,13 @@ export default function LeftCard() {
 
   return (
     <aside className="left-card">
-      <div className="card-top">
-        <h2>
-          <svg width="22" height="22" viewBox="0 0 24 24" style={{verticalAlign:'middle',marginRight:10}} xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" fill="#f0fbf5" />
-            <circle cx="12" cy="12" r="6" fill="#ffffff" />
-            <path d="M9 12l2 2 4-4" stroke="#28a745" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          e-Apostille Verification
-        </h2>
-        <p className="muted">Public verification portal · Certificate verified</p>
-      </div>
+      
 
       <div className="card-body">
         <Details data={data} />
         <div className="card-actions bottom-actions">
-          <button className="btn secondary">Refresh</button>
-          <button className="btn">Back</button>
+          <button className="btn primary">Refresh</button>
+          <button className="btn secondary">Back</button>
         </div>
       </div>
     </aside>

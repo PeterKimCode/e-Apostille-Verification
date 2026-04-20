@@ -74,3 +74,19 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 /* Left card content sizing */
 .details-grid .label{font-size:14px}
 .details-grid .value{font-weight:700;font-size:14px}
+
+/* small subtitle below Verification Details title */
+.details-sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* explicit primary button class and view-only button */
+.btn.primary{background:#0b2a3a;color:#fff}
+.preview-actions{display:flex;align-items:center}
+.btn.view-only{background:#fff;color:#333;border:1px solid #e6eef8;padding:6px 10px;border-radius:16px}
+
+/* Page meta row below header */
+.page-meta{max-width:1180px;margin:18px auto;display:flex;justify-content:space-between;align-items:center;padding:0 18px}
+.meta-badge{display:flex;align-items:center;gap:12px}
+.meta-icon{width:40px;height:40px;border-radius:50%;background:#f0fbf5;display:inline-flex;align-items:center;justify-content:center;color:#28a745;font-weight:700}
+.meta-title{font-weight:700;font-size:18px}
+.meta-sub{color:var(--muted);font-size:13px}
+.meta-right .header-time{margin:0}

@@ -12,6 +12,9 @@ export default function PdfPreview() {
           <div className="preview-title">e-Apostille Preview</div>
           <div className="preview-sub muted">For visual verification only. Preview link may expire soon.</div>
         </div>
+        <div className="preview-actions">
+          <button className="btn view-only">View only</button>
+        </div>
       </div>
 
       <div className="preview-frame">

@@ -25,12 +25,23 @@ export default function App() {
               <div className="brand-sub">OFFICE OF CONSULAR AFFAIRS<br/>AUTHENTICATION DIVISION</div>
             </div>
           </div>
-          <div className="header-right">
-            <div className="header-time">{timeString}</div>
-            <div className="header-title">e-Apostille Verification</div>
-          </div>
         </div>
       </header>
+
+      <div className="page-meta">
+        <div className="meta-left">
+          <div className="meta-badge">
+            <span className="meta-icon">✔︎</span>
+            <div>
+              <div className="meta-title">e-Apostille Verification</div>
+              <div className="meta-sub">Public verification portal · Certificate verified</div>
+            </div>
+          </div>
+        </div>
+        <div className="meta-right">
+          <div className="header-time">{timeString}</div>
+        </div>
+      </div>
 
       <div className="app-root layout-two-col">
         <main className="main-grid">
