@@ -1,4 +1,4 @@
-# e-Apostille Verification (Demo)
+# e-Apostille Verification
 
 This repository contains a lightweight React + Vite demo that reproduces the look-and-feel and basic verification flow of an e-Apostille registry UI. It is a functional demo and does not connect to the official backend.
 
