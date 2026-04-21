@@ -5,13 +5,26 @@
     <meta name="robots" content="noindex">
     <title>Redirecting...</title>
     <script>
-      // Redirect unknown paths to the SPA entry using a hash so the client router can handle it
+      // Robust redirect: convert deep URLs like /verify/123 to /#/verify/123
       (function () {
-        var path = window.location.pathname + window.location.search + window.location.hash;
-        var base = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
-        // Build hash URL preserving the path
-        var target = base + '#' + path;
-        window.location.replace(target);
+        try {
+          var pathname = window.location.pathname || '/';
+          var search = window.location.search || '';
+          var hash = window.location.hash || '';
+
+          // If the URL already contains a hash route, do nothing
+          if (pathname.indexOf('/#/') === 0 || hash.indexOf('#/') === 0) return;
+
+          // Build new URL with hash preserving path + search + hash
+          var origin = window.location.origin || (window.location.protocol + '//' + window.location.host);
+          var newUrl = origin.replace(/\/$/, '') + '/#' + pathname + search + hash;
+
+          // Redirect using replace so 404 stays out of history
+          window.location.replace(newUrl);
+        } catch (e) {
+          // Fallback: go to site root
+          try { window.location.replace('/'); } catch (ee) { /* noop */ }
+        }
       })();
     </script>
   </head>
