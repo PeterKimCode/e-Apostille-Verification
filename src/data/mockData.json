@@ -21,10 +21,6 @@
     "capacity": "Director",
     "sealOf": "Department of Labor",
     "verifiedDate": "2026-02-05",
-<<<<<<< HEAD
     "pdfUrl": "/Apostille.pdf"
-=======
-    "pdfUrl": "Apostille.pdf"
->>>>>>> 95f9cf6 (fix(data): correct mock pdf paths)
   }
 ]
