@@ -38,13 +38,21 @@ export default function LeftCard() {
   const { serialNumber } = useParams()
   const record = mockData.find(r => r.serialNumber === serialNumber)
 
+  function handleRefresh() {
+    window.location.reload()
+  }
+
+  function handleBack() {
+    window.location.href = 'https://e-registry.apostille.gov.ph/'
+  }
+
   return (
     <aside className="left-card">
       <div className="card-body">
         <Details record={record} />
         <div className="card-actions bottom-actions">
-          <button className="btn primary">Refresh</button>
-          <button className="btn secondary">Back</button>
+          <button className="btn primary" type="button" onClick={handleRefresh}>Refresh</button>
+          <button className="btn secondary" type="button" onClick={handleBack}>Back</button>
         </div>
       </div>
     </aside>

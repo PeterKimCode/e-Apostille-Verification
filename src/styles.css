@@ -7,14 +7,14 @@
   --muted:#666;
 }
 *{box-sizing:border-box}
-.app-root{max-width:1280px;margin:14px auto;padding:0 36px 0 120px}
+.app-root{max-width:1280px;margin:14px auto 0;padding:0 36px 0 120px}
 body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:#111}
 
 /* Header */
 .top-header{background:#26292b;color:#fff;padding:18px 0}
 .header-inner{display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:0 auto;padding:0 8px}
 .brand{display:flex;align-items:center;gap:16px}
-.logo-image{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.06);background:#fff}
+.logo-image{width:86px;height:86px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.06);background:#fff}
 .brand-text .brand-title{font-family:'Cinzel', serif;font-weight:800;font-size:18px;letter-spacing:1px}
 .brand-text .brand-sub{font-size:12px;opacity:.85;margin-top:2px}
 .header-right{display:flex;flex-direction:column;align-items:flex-end}
@@ -95,7 +95,7 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 .btn.view-only{background:#fff;color:#333;border:1px solid #e6eef8;padding:6px 10px;border-radius:16px}
 
 /* Page meta row below header */
-.page-meta{max-width:1280px;margin:4px auto 8px;display:flex;justify-content:space-between;align-items:center;padding:0 36px 0 120px}
+.page-meta{max-width:1280px;margin:40px auto 8px;display:flex;justify-content:space-between;align-items:center;padding:0 36px 0 120px}
 /* show header time; we will not hide it here (preview will also show time inside header) */
 .meta-badge{display:flex;align-items:center;gap:12px}
 .meta-icon{width:40px;height:40px;border-radius:12px;display:block;object-fit:cover;flex:0 0 40px}
