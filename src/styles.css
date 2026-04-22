@@ -1,11 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;800&display=swap');
+
 :root{
   --bg:#f6f8fa;
   --card:#fff;
   --accent:#0b63d6;
   --muted:#666;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;800&display=swap');
 *{box-sizing:border-box}
 .app-root{max-width:1280px;margin:14px auto;padding:0 36px 0 120px}
 body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:#111}
@@ -98,7 +98,7 @@ body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);mar
 .page-meta{max-width:1280px;margin:4px auto 8px;display:flex;justify-content:space-between;align-items:center;padding:0 36px 0 120px}
 /* show header time; we will not hide it here (preview will also show time inside header) */
 .meta-badge{display:flex;align-items:center;gap:12px}
-.meta-icon{width:40px;height:40px;border-radius:50%;background:#f0fbf5;display:inline-flex;align-items:center;justify-content:center;color:#28a745;font-weight:700}
+.meta-icon{width:40px;height:40px;border-radius:12px;display:block;object-fit:cover;flex:0 0 40px}
 .meta-title{font-weight:700;font-size:18px}
 .meta-sub{color:var(--muted);font-size:13px}
 .meta-right .header-time{margin:0}
