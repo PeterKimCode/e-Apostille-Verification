@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { findRecordByPageUrl } from '../data/records'
 
-function ToolbarButton({ label, title, onClick, disabled = false, compact = false }) {
+function ToolbarButton({ label, title, onClick, disabled = false }) {
   return (
     <button
-      className={`preview-toolbar-btn${compact ? ' preview-toolbar-btn-compact' : ''}`}
+      className="preview-toolbar-btn"
       type="button"
       onClick={onClick}
       title={title}
@@ -185,14 +185,14 @@ export default function PdfPreview() {
     setRotation((prev) => (prev + 90) % 360)
   }
 
-  function handleRotateBack() {
-    setRotation((prev) => (prev + 270) % 360)
-  }
-
   function handleReset() {
     setZoom(1)
     setRotation(0)
     scrollToPage(1)
+  }
+
+  function handleRotateBack() {
+    setRotation((prev) => (prev + 270) % 360)
   }
 
   function handlePreviousView() {
@@ -214,13 +214,9 @@ export default function PdfPreview() {
     const printWindow = window.open(pdfUrl, '_blank', 'noopener,noreferrer')
     if (!printWindow) return
 
-    printWindow.addEventListener(
-      'load',
-      () => {
-        printWindow.print()
-      },
-      { once: true }
-    )
+    printWindow.addEventListener('load', () => {
+      printWindow.print()
+    }, { once: true })
   }
 
   const canInteract = previewState === 'ready' && pageCount > 0
@@ -257,44 +253,80 @@ export default function PdfPreview() {
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="-" title="Previous page" onClick={handlePreviousView} disabled={!canInteract || currentPage <= 1} />
-                <ToolbarButton label="+" title="Next page" onClick={handleNextView} disabled={!canInteract || currentPage >= pageCount} />
+                <ToolbarButton
+                  label="−"
+                  title="Previous page"
+                  onClick={handlePreviousView}
+                  disabled={!canInteract || currentPage <= 1}
+                />
+                <ToolbarButton
+                  label="+"
+                  title="Next page"
+                  onClick={handleNextView}
+                  disabled={!canInteract || currentPage >= pageCount}
+                />
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="-" title="Zoom out" onClick={handleZoomOut} disabled={!canInteract} />
+                <ToolbarButton label="−" title="Zoom out" onClick={handleZoomOut} disabled={!canInteract} />
                 <ToolbarButton label="+" title="Zoom in" onClick={handleZoomIn} disabled={!canInteract} />
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="CCW" title="Rotate counterclockwise" onClick={handleRotateBack} disabled={!canInteract} compact />
-                <ToolbarButton label="CW" title="Rotate clockwise" onClick={handleRotate} disabled={!canInteract} compact />
+                <ToolbarButton
+                  label="↺"
+                  title="Rotate counterclockwise"
+                  onClick={handleRotateBack}
+                  disabled={!canInteract}
+                />
+                <ToolbarButton label="↻" title="Rotate clockwise" onClick={handleRotate} disabled={!canInteract} />
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="Prev" title="Go to previous view" onClick={handlePreviousView} disabled={!canInteract || currentPage <= 1} compact />
-                <ToolbarButton label="Next" title="Go to next view" onClick={handleNextView} disabled={!canInteract || currentPage >= pageCount} compact />
+                <ToolbarButton
+                  label="↶"
+                  title="Go to previous view"
+                  onClick={handlePreviousView}
+                  disabled={!canInteract || currentPage <= 1}
+                />
+                <ToolbarButton
+                  label="↷"
+                  title="Go to next view"
+                  onClick={handleNextView}
+                  disabled={!canInteract || currentPage >= pageCount}
+                />
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="Home" title="Reset view" onClick={handleReset} disabled={!canInteract} compact />
-                <ToolbarButton label="DL" title="Download PDF" onClick={handleDownload} disabled={!pdfUrl} compact />
-                <ToolbarButton label="Print" title="Print PDF" onClick={handlePrint} disabled={!pdfUrl} compact />
-                <ToolbarButton label="More" title="More options" onClick={handleDownload} disabled={!pdfUrl} compact />
+                <ToolbarButton label="⌂" title="Reset view" onClick={handleReset} disabled={!canInteract} />
+                <ToolbarButton label="↓" title="Download PDF" onClick={handleDownload} disabled={!pdfUrl} />
+                <ToolbarButton label="⎙" title="Print PDF" onClick={handlePrint} disabled={!pdfUrl} />
+                <ToolbarButton
+                  label="⋮"
+                  title="More options"
+                  onClick={handleDownload}
+                  disabled={!pdfUrl}
+                />
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group preview-toolbar-group-zoom">
                 <div className="preview-toolbar-value">{zoomPercent}</div>
+                <ToolbarButton
+                  label=">"
+                  title="Next page"
+                  onClick={handleNextView}
+                  disabled={!canInteract || currentPage >= pageCount}
+                />
               </div>
             </div>
 
