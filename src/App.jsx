@@ -33,7 +33,7 @@ export default function App() {
             />
             <div>
               <div className="meta-title">e-Apostille Verification</div>
-              <div className="meta-sub">Public verification portal · Certificate verified</div>
+              <div className="meta-sub">Public verification portal - Certificate verified</div>
             </div>
           </div>
         </div>
