@@ -11,55 +11,63 @@ npm run dev
 
 Open `http://localhost:5173`.
 
-## How routing works
+## Route mapping
 
-- The route is based on `serialNumber`, not on the PDF filename.
-- Example URL:
-  `https://e-registryapostillegov.ph/#/verify/26e-0016922`
-- React Router reads `26e-0016922` from the URL.
-- The app then finds the matching record in [src/data/mockData.json](src/data/mockData.json).
-- That record's `pdfUrl` points to the actual PDF file inside [public](public).
+- The verification page URL now uses `pageUrl`.
+- Example:
+  `https://e-registryapostillegov.ph/#/verify/publicregistry.apostille.gov.phQhgdhfeTh98OKOJssdsQ26e-0016922`
+- Each record in [src/data/mockData.json](src/data/mockData.json) keeps both:
+  - `serialNumber`: shown in the details card
+  - `pageUrl`: used by the router and public page address
+- The app resolves `pageUrl` to the matching record, then loads that record's `pdfUrl`.
 
-Because of that mapping, the expected public address is the serial-number route above, not a route that contains the full PDF filename.
+Example record:
 
-## Why the preview was blank
+```json
+{
+  "serialNumber": "26e-0013558856",
+  "signedBy": "Rogelio T. Galera, Jr",
+  "capacity": "Regional Director",
+  "sealOf": "Commission on Higher Education",
+  "verifiedDate": "2026-04-21",
+  "pdfUrl": "/eApostille-26e-0013558856.pdf",
+  "pageUrl": "publicregistry.apostille.gov.phQhgdhfeTh98OKOJssdsQ26e-0016922"
+}
+```
 
-- The old preview used a browser-native `<iframe>` PDF viewer.
-- In some browser setups, the PDF URL is treated as a downloadable file instead of an embeddable preview.
-- When that happens, the file downloads and the preview area stays empty.
+## Preview toolbar
 
-The app now renders PDFs with `pdfjs-dist` inside the page, so preview rendering no longer depends on the browser's built-in PDF iframe behavior.
+- The preview now uses an in-app PDF viewer built with `pdfjs-dist`.
+- A custom toolbar is shown above the document preview.
+- Supported controls:
+  - previous page / next page
+  - zoom out / zoom in
+  - rotate
+  - reset view
+  - download
+  - print
+
+This avoids the older browser-native iframe behavior that could show a blank preview while downloading the PDF instead.
 
 ## How to add or replace a PDF
 
 1. Put the PDF file in [public](public).
 2. Add or update the record in [src/data/mockData.json](src/data/mockData.json).
 3. Set:
-   - `serialNumber`: the value used in the URL
-   - `pdfUrl`: the exact public file path beginning with `/`
-
-Example:
-
-```json
-{
-  "serialNumber": "26e-0016922",
-  "signedBy": "Rogelio T. Galera, Jr",
-  "capacity": "Regional Director",
-  "sealOf": "Commission on Higher Education",
-  "verifiedDate": "2026-04-22",
-  "pdfUrl": "/publicregistry.apostille.gov.phQhgdhfeTh98OKOJssdsQ26e-0016922.pdf"
-}
-```
+   - `serialNumber`: display value for the details panel
+   - `pageUrl`: public route slug
+   - `pdfUrl`: exact file path under `public`, starting with `/`
 
 ## Main files
 
-- [src/data/mockData.json](src/data/mockData.json): verification records and PDF mapping
-- [src/components/PdfPreview.jsx](src/components/PdfPreview.jsx): in-app PDF preview renderer
+- [src/data/mockData.json](src/data/mockData.json): verification records
+- [src/data/records.js](src/data/records.js): route-to-record lookup helpers
+- [src/components/PdfPreview.jsx](src/components/PdfPreview.jsx): PDF preview and toolbar
 - [src/components/LeftCard.jsx](src/components/LeftCard.jsx): verification details panel
 - [src/App.jsx](src/App.jsx): page shell and header
+- [src/main.jsx](src/main.jsx): router setup
 - [src/styles.css](src/styles.css): styling
-- [src/main.jsx](src/main.jsx): hash router setup
-- [public/404.html](public/404.html): GitHub Pages deep-link redirect for SPA routes
+- [public/404.html](public/404.html): GitHub Pages SPA redirect
 
 ## GitHub Pages
 

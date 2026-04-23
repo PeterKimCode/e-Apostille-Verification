@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import mockData from '../data/mockData.json'
+import { findRecordByPageUrl } from '../data/records'
 
 function Details({ record }) {
-  if (!record) return <div className="verification-notfound">The document number is invalid.</div>
+  if (!record) return <div className="verification-notfound">The document URL is invalid.</div>
 
   return (
     <div className="verification-details">
@@ -12,7 +12,7 @@ function Details({ record }) {
           <div className="title">Verification Details</div>
           <div className="details-sub">This certificate is valid and matches the registry record.</div>
         </div>
-        <div className="badge verified"><span className="dot"/>Verified</div>
+        <div className="badge verified"><span className="dot" />Verified</div>
       </div>
 
       <div className="details-grid">
@@ -35,8 +35,8 @@ function Details({ record }) {
 }
 
 export default function LeftCard() {
-  const { serialNumber } = useParams()
-  const record = mockData.find(r => r.serialNumber === serialNumber)
+  const { pageUrl } = useParams()
+  const record = findRecordByPageUrl(pageUrl)
 
   function handleRefresh() {
     window.location.reload()
