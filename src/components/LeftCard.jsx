@@ -14,6 +14,10 @@ function Details({ record }) {
         </div>
         <div className="badge verified"><span className="dot" />Verified</div>
       </div>
+      <div className="panel-header-accent" aria-hidden="true">
+        <div className="panel-header-shade" />
+        <div className="panel-header-line" />
+      </div>
 
       <div className="details-grid">
         <div className="label">Serial Number</div>
