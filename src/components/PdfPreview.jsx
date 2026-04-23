@@ -199,6 +199,10 @@ export default function PdfPreview() {
     scrollToPage(1)
   }
 
+  function handleFitWidth() {
+    setZoom(1)
+  }
+
   function handlePreviousView() {
     scrollToPage(Math.max(1, currentPage - 1))
   }
@@ -270,8 +274,8 @@ export default function PdfPreview() {
                 <ToolbarButton title="Rotate counterclockwise" onClick={handleRotateBack} disabled={!canInteract}>
                   <Icon>&#8634;</Icon>
                 </ToolbarButton>
-                <ToolbarButton title="Rotate clockwise" onClick={handleRotate} disabled={!canInteract}>
-                  <Icon>&#8635;</Icon>
+                <ToolbarButton title="Fit to width" onClick={handleFitWidth} disabled={!canInteract}>
+                  <Icon>&#8767;</Icon>
                 </ToolbarButton>
               </div>
 
@@ -289,9 +293,6 @@ export default function PdfPreview() {
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton title="Reset view" onClick={handleReset} disabled={!canInteract}>
-                  <Icon>&#8962;</Icon>
-                </ToolbarButton>
                 <ToolbarButton title="Download PDF" onClick={handleDownload} disabled={!pdfUrl}>
                   <Icon>&#8595;</Icon>
                 </ToolbarButton>
