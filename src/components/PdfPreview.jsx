@@ -79,43 +79,46 @@ export default function PdfPreview() {
         loadingTask = pdfjs.getDocument(pdfUrl)
         const pdf = await loadingTask.promise
         const container = pagesRef.current
-        const safePage = Math.min(Math.max(currentPage, 1), pdf.numPages)
-        const page = await pdf.getPage(safePage)
-        const firstViewport = page.getViewport({ scale: 1, rotation })
         const containerWidth = Math.max(container.clientWidth - 56, 320)
-        const scale = Math.min((containerWidth / firstViewport.width) * zoom, 2.4)
-        const viewport = page.getViewport({ scale, rotation })
-        const outputScale = window.devicePixelRatio || 1
-        const pageShell = document.createElement('section')
-        const canvas = document.createElement('canvas')
-        const context = canvas.getContext('2d', { alpha: false })
 
-        if (!context) {
-          throw new Error('Canvas rendering is not available in this browser.')
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+          if (disposed) return
+
+          const page = await pdf.getPage(pageNumber)
+          const firstViewport = page.getViewport({ scale: 1, rotation })
+          const scale = Math.min((containerWidth / firstViewport.width) * zoom, 2.4)
+          const viewport = page.getViewport({ scale, rotation })
+          const outputScale = window.devicePixelRatio || 1
+          const pageShell = document.createElement('section')
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d', { alpha: false })
+
+          if (!context) {
+            throw new Error('Canvas rendering is not available in this browser.')
+          }
+
+          pageShell.className = 'pdf-page-shell'
+          pageShell.dataset.pageNumber = String(pageNumber)
+          canvas.className = 'pdf-page-canvas'
+          canvas.width = Math.floor(viewport.width * outputScale)
+          canvas.height = Math.floor(viewport.height * outputScale)
+          canvas.style.width = `${Math.floor(viewport.width)}px`
+          canvas.style.height = `${Math.floor(viewport.height)}px`
+
+          pageShell.appendChild(canvas)
+          container.appendChild(pageShell)
+
+          await page.render({
+            canvasContext: context,
+            transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
+            viewport
+          }).promise
         }
-
-        pageShell.className = 'pdf-page-shell'
-        pageShell.dataset.pageNumber = String(safePage)
-        canvas.className = 'pdf-page-canvas'
-        canvas.width = Math.floor(viewport.width * outputScale)
-        canvas.height = Math.floor(viewport.height * outputScale)
-        canvas.style.width = `${Math.floor(viewport.width)}px`
-        canvas.style.height = `${Math.floor(viewport.height)}px`
-
-        pageShell.appendChild(canvas)
-        container.appendChild(pageShell)
-
-        await page.render({
-          canvasContext: context,
-          transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
-          viewport
-        }).promise
 
         if (!disposed) {
           setPageCount(pdf.numPages)
-          setCurrentPage(safePage)
+          setCurrentPage((prev) => Math.min(Math.max(prev, 1), pdf.numPages))
           setPreviewState('ready')
-          container.scrollTop = 0
         }
       } catch (error) {
         if (!disposed) {
@@ -133,11 +136,45 @@ export default function PdfPreview() {
         loadingTask.destroy()
       }
     }
-  }, [pdfUrl, currentPage, zoom, rotation])
+  }, [pdfUrl, zoom, rotation])
+
+  useEffect(() => {
+    if (!pagesRef.current || previewState !== 'ready') return undefined
+
+    const container = pagesRef.current
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (!visibleEntry) return
+
+        const nextPage = Number(visibleEntry.target.dataset.pageNumber || '1')
+        setCurrentPage(nextPage)
+      },
+      {
+        root: container,
+        threshold: [0.35, 0.6, 0.85]
+      }
+    )
+
+    const pageNodes = container.querySelectorAll('.pdf-page-shell')
+    pageNodes.forEach((node) => observer.observe(node))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [previewState, pageCount, zoom, rotation])
 
   function scrollToPage(pageNumber) {
-    if (pageCount < 1) return
-    setCurrentPage(Math.min(Math.max(pageNumber, 1), pageCount))
+    if (!pagesRef.current) return
+
+    const target = pagesRef.current.querySelector(`[data-page-number="${pageNumber}"]`)
+    if (!target) return
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setCurrentPage(pageNumber)
   }
 
   function handleZoomIn() {
