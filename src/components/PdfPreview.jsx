@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { findRecordByPageUrl } from '../data/records'
 
-function ToolbarButton({ label, title, onClick, disabled = false, compact = false }) {
+function ToolbarButton({ children, title, onClick, disabled = false, compact = false }) {
   return (
     <button
       className={`preview-toolbar-btn${compact ? ' preview-toolbar-btn-compact' : ''}`}
@@ -12,13 +12,21 @@ function ToolbarButton({ label, title, onClick, disabled = false, compact = fals
       aria-label={title}
       disabled={disabled}
     >
-      {label}
+      {children}
     </button>
   )
 }
 
 function ToolbarSeparator() {
   return <div className="preview-toolbar-separator" aria-hidden="true" />
+}
+
+function ToolbarIcon({ children }) {
+  return (
+    <svg className="preview-toolbar-icon" viewBox="0 0 24 24" aria-hidden="true">
+      {children}
+    </svg>
+  )
 }
 
 export default function PdfPreview() {
@@ -51,10 +59,10 @@ export default function PdfPreview() {
       if (!pagesRef.current) return
 
       pagesRef.current.innerHTML = ''
-      setPageCount(0)
       setPreviewError('')
 
       if (!pdfUrl) {
+        setPageCount(0)
         setPreviewState('missing')
         return
       }
@@ -71,50 +79,43 @@ export default function PdfPreview() {
         loadingTask = pdfjs.getDocument(pdfUrl)
         const pdf = await loadingTask.promise
         const container = pagesRef.current
-        const containerWidth = Math.max(container.clientWidth - 32, 320)
+        const safePage = Math.min(Math.max(currentPage, 1), pdf.numPages)
+        const page = await pdf.getPage(safePage)
+        const firstViewport = page.getViewport({ scale: 1, rotation })
+        const containerWidth = Math.max(container.clientWidth - 56, 320)
+        const scale = Math.min((containerWidth / firstViewport.width) * zoom, 2.4)
+        const viewport = page.getViewport({ scale, rotation })
+        const outputScale = window.devicePixelRatio || 1
+        const pageShell = document.createElement('section')
+        const canvas = document.createElement('canvas')
+        const context = canvas.getContext('2d', { alpha: false })
 
-        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-          if (disposed) return
-
-          const page = await pdf.getPage(pageNumber)
-          const firstViewport = page.getViewport({ scale: 1, rotation })
-          const scale = Math.min((containerWidth / firstViewport.width) * zoom, 2.4)
-          const viewport = page.getViewport({ scale, rotation })
-          const outputScale = window.devicePixelRatio || 1
-          const pageShell = document.createElement('section')
-          const pageLabel = document.createElement('div')
-          const canvas = document.createElement('canvas')
-          const context = canvas.getContext('2d', { alpha: false })
-
-          if (!context) {
-            throw new Error('Canvas rendering is not available in this browser.')
-          }
-
-          pageShell.className = 'pdf-page-shell'
-          pageShell.dataset.pageNumber = String(pageNumber)
-          pageLabel.className = 'pdf-page-label'
-          pageLabel.textContent = `Page ${pageNumber}`
-          canvas.className = 'pdf-page-canvas'
-          canvas.width = Math.floor(viewport.width * outputScale)
-          canvas.height = Math.floor(viewport.height * outputScale)
-          canvas.style.width = `${Math.floor(viewport.width)}px`
-          canvas.style.height = `${Math.floor(viewport.height)}px`
-
-          pageShell.appendChild(pageLabel)
-          pageShell.appendChild(canvas)
-          container.appendChild(pageShell)
-
-          await page.render({
-            canvasContext: context,
-            transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
-            viewport
-          }).promise
+        if (!context) {
+          throw new Error('Canvas rendering is not available in this browser.')
         }
+
+        pageShell.className = 'pdf-page-shell'
+        pageShell.dataset.pageNumber = String(safePage)
+        canvas.className = 'pdf-page-canvas'
+        canvas.width = Math.floor(viewport.width * outputScale)
+        canvas.height = Math.floor(viewport.height * outputScale)
+        canvas.style.width = `${Math.floor(viewport.width)}px`
+        canvas.style.height = `${Math.floor(viewport.height)}px`
+
+        pageShell.appendChild(canvas)
+        container.appendChild(pageShell)
+
+        await page.render({
+          canvasContext: context,
+          transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0],
+          viewport
+        }).promise
 
         if (!disposed) {
           setPageCount(pdf.numPages)
-          setCurrentPage((prev) => Math.min(prev, pdf.numPages))
+          setCurrentPage(safePage)
           setPreviewState('ready')
+          container.scrollTop = 0
         }
       } catch (error) {
         if (!disposed) {
@@ -132,45 +133,11 @@ export default function PdfPreview() {
         loadingTask.destroy()
       }
     }
-  }, [pdfUrl, zoom, rotation])
-
-  useEffect(() => {
-    if (!pagesRef.current || previewState !== 'ready') return undefined
-
-    const container = pagesRef.current
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (!visibleEntry) return
-
-        const nextPage = Number(visibleEntry.target.dataset.pageNumber || '1')
-        setCurrentPage(nextPage)
-      },
-      {
-        root: container,
-        threshold: [0.35, 0.6, 0.85]
-      }
-    )
-
-    const pageNodes = container.querySelectorAll('.pdf-page-shell')
-    pageNodes.forEach((node) => observer.observe(node))
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [previewState, pageCount, zoom, rotation])
+  }, [pdfUrl, currentPage, zoom, rotation])
 
   function scrollToPage(pageNumber) {
-    if (!pagesRef.current) return
-
-    const target = pagesRef.current.querySelector(`[data-page-number="${pageNumber}"]`)
-    if (!target) return
-
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    setCurrentPage(pageNumber)
+    if (pageCount < 1) return
+    setCurrentPage(Math.min(Math.max(pageNumber, 1), pageCount))
   }
 
   function handleZoomIn() {
@@ -224,7 +191,6 @@ export default function PdfPreview() {
   }
 
   const canInteract = previewState === 'ready' && pageCount > 0
-  const zoomPercent = `${Math.round(zoom * 100)}%`
 
   return (
     <section className="pdf-preview">
@@ -251,50 +217,95 @@ export default function PdfPreview() {
           <div className="preview-doc">
             <div className="preview-toolbar">
               <div className="preview-toolbar-group preview-toolbar-group-page">
-                <div className="preview-page-indicator">{currentPage} / {Math.max(pageCount, 1)}</div>
+                <div className="preview-page-indicator">
+                  <span>{currentPage}</span>
+                  <span>/</span>
+                  <span>{Math.max(pageCount, 1)}</span>
+                </div>
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="-" title="Previous page" onClick={handlePreviousView} disabled={!canInteract || currentPage <= 1} />
-                <ToolbarButton label="+" title="Next page" onClick={handleNextView} disabled={!canInteract || currentPage >= pageCount} />
+                <ToolbarButton title="Zoom out" onClick={handleZoomOut} disabled={!canInteract}>
+                  <ToolbarIcon>
+                    <path d="M6 12h12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
+                <ToolbarButton title="Zoom in" onClick={handleZoomIn} disabled={!canInteract}>
+                  <ToolbarIcon>
+                    <path d="M12 6v12M6 12h12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="-" title="Zoom out" onClick={handleZoomOut} disabled={!canInteract} />
-                <ToolbarButton label="+" title="Zoom in" onClick={handleZoomIn} disabled={!canInteract} />
+                <ToolbarButton title="Rotate counterclockwise" onClick={handleRotateBack} disabled={!canInteract}>
+                  <ToolbarIcon>
+                    <path d="M8 8H4v4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5 11a7 7 0 1 0 2-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
+                <ToolbarButton title="Rotate clockwise" onClick={handleRotate} disabled={!canInteract}>
+                  <ToolbarIcon>
+                    <path d="M16 8h4v4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M19 11a7 7 0 1 1-2-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="CCW" title="Rotate counterclockwise" onClick={handleRotateBack} disabled={!canInteract} compact />
-                <ToolbarButton label="CW" title="Rotate clockwise" onClick={handleRotate} disabled={!canInteract} compact />
+                <ToolbarButton title="Previous page" onClick={handlePreviousView} disabled={!canInteract || currentPage <= 1}>
+                  <ToolbarIcon>
+                    <path d="M14 7l-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
+                <ToolbarButton title="Next page" onClick={handleNextView} disabled={!canInteract || currentPage >= pageCount}>
+                  <ToolbarIcon>
+                    <path d="M10 7l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="Prev" title="Go to previous view" onClick={handlePreviousView} disabled={!canInteract || currentPage <= 1} compact />
-                <ToolbarButton label="Next" title="Go to next view" onClick={handleNextView} disabled={!canInteract || currentPage >= pageCount} compact />
+                <ToolbarButton title="Reset view" onClick={handleReset} disabled={!canInteract}>
+                  <ToolbarIcon>
+                    <path d="M12 5v3M9.5 6.5L12 4l2.5 2.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7 11a5 5 0 1 0 5-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
               </div>
 
               <ToolbarSeparator />
 
               <div className="preview-toolbar-group">
-                <ToolbarButton label="Home" title="Reset view" onClick={handleReset} disabled={!canInteract} compact />
-                <ToolbarButton label="DL" title="Download PDF" onClick={handleDownload} disabled={!pdfUrl} compact />
-                <ToolbarButton label="Print" title="Print PDF" onClick={handlePrint} disabled={!pdfUrl} compact />
-                <ToolbarButton label="More" title="More options" onClick={handleDownload} disabled={!pdfUrl} compact />
-              </div>
-
-              <ToolbarSeparator />
-
-              <div className="preview-toolbar-group preview-toolbar-group-zoom">
-                <div className="preview-toolbar-value">{zoomPercent}</div>
+                <ToolbarButton title="Download PDF" onClick={handleDownload} disabled={!pdfUrl} compact>
+                  <ToolbarIcon>
+                    <path d="M12 5v9" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    <path d="M8.5 11.5 12 15l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M6 18h12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
+                <ToolbarButton title="Print PDF" onClick={handlePrint} disabled={!pdfUrl} compact>
+                  <ToolbarIcon>
+                    <path d="M8 9V5h8v4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <rect x="6" y="11" width="12" height="6" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                    <path d="M8 14h8v5H8z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                  </ToolbarIcon>
+                </ToolbarButton>
+                <ToolbarButton title="More options" onClick={handleDownload} disabled={!pdfUrl} compact>
+                  <ToolbarIcon>
+                    <circle cx="12" cy="6.5" r="1.2" fill="currentColor" />
+                    <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+                    <circle cx="12" cy="17.5" r="1.2" fill="currentColor" />
+                  </ToolbarIcon>
+                </ToolbarButton>
               </div>
             </div>
 
