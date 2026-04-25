@@ -1,6 +1,6 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { findRecordByPageUrl } from '../data/records'
+import { useLocation } from 'react-router-dom'
+import { findRecordByPageUrl, normalizePageUrl } from '../data/records'
 
 function Details({ record }) {
   if (!record) return <div className="verification-notfound">The document URL is invalid.</div>
@@ -39,7 +39,8 @@ function Details({ record }) {
 }
 
 export default function LeftCard() {
-  const { pageUrl } = useParams()
+  const location = useLocation()
+  const pageUrl = normalizePageUrl(location.pathname)
   const record = findRecordByPageUrl(pageUrl)
 
   function handleRefresh() {

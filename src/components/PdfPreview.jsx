@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { findRecordByPageUrl } from '../data/records'
+import { useLocation } from 'react-router-dom'
+import { findRecordByPageUrl, normalizePageUrl } from '../data/records'
 
 function ToolbarButton({ children, title, onClick, disabled = false, compact = false }) {
   return (
@@ -30,7 +30,8 @@ function ToolbarIcon({ children }) {
 }
 
 export default function PdfPreview() {
-  const { pageUrl } = useParams()
+  const location = useLocation()
+  const pageUrl = normalizePageUrl(location.pathname)
   const record = findRecordByPageUrl(pageUrl)
   const pagesRef = useRef(null)
   const [previewState, setPreviewState] = useState('idle')

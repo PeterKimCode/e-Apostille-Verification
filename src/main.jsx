@@ -12,7 +12,7 @@ root.render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/verify/:pageUrl" element={<App />} />
+        <Route path="/verify/*" element={<App />} />
         <Route path="/" element={<Navigate to={`/verify/${defaultPageUrl}`} replace />} />
         <Route path="*" element={<Navigate to={`/verify/${defaultPageUrl}`} replace />} />
       </Routes>
